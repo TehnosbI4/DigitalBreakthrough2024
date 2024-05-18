@@ -15,12 +15,17 @@ public class IndexModel : PageModel
     private IWebHostEnvironment _environment;
     private static HttpClient _httpClient = new() {Timeout = TimeSpan.FromMinutes(30) };
     private string _filesPath;
+    private JsonSerializerOptions _jsonSerializerOptions;
 
     public IndexModel(ILogger<IndexModel> logger, IWebHostEnvironment hostingEnvironment)
     {
         _logger = logger;
         _environment = hostingEnvironment;
         _filesPath = Path.Combine(_environment.ContentRootPath, "wwwroot", "AudioFiles");
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
     }
 
     [BindProperty, Display(Name = "File")] public IList<IFormFile> UploadedFiles { get; set; }
@@ -31,7 +36,7 @@ public class IndexModel : PageModel
 
         var responseString = await SendAudioFilesAsync(audioFiles);
         
-        var response = JsonSerializer.Deserialize<ResponseDto>(responseString);
+        var response = JsonSerializer.Deserialize<ResponseDto>(responseString, _jsonSerializerOptions);
         
         
         var table = new List<AnalyzeResult>();
