@@ -20,12 +20,12 @@ public class IndexModel : PageModel
     {
         _logger = logger;
         _environment = hostingEnvironment;
-        _filesPath = Path.Combine(_environment.ContentRootPath, "AudioFiles");
+        _filesPath = Path.Combine(_environment.ContentRootPath, "wwwroot", "AudioFiles");
     }
 
     [BindProperty, Display(Name = "File")] public IList<IFormFile> UploadedFiles { get; set; }
 
-    public async Task OnPost()
+    public async Task<IActionResult> OnPost()
     {
         var audioFiles = await GetAudioFilesAsync();
 
@@ -36,13 +36,31 @@ public class IndexModel : PageModel
         for (var i = 0; i < audioFiles.Count; i++)
         {
             var file = audioFiles[i];
-            var filePath = Path.Combine(_filesPath, file.Name);
+            var filePath = Path.Combine("AudioFiles", file.Name);
             var row = new AnalyzeResult(filePath, true, "shiiiiish");
             table.Add(row);
         }
 
         Results = table;
+        
+        return Partial("_TablePartial", Results);
     }
+    
+    public void OnGet()
+    {
+        Results = new List<AnalyzeResult>();
+    }
+    //
+    // public PartialViewResult OnGetTablePartial()
+    // {
+    //     // Results = new List<AnalyzeResult>()
+    //     // {
+    //     //     new AnalyzeResult(
+    //     //         "AudioFiles/02.05.2024 01_08_44.mp3",
+    //     //         true, "ewrtyu")
+    //     // };
+    //     return Partial("_TablePartial", Results); 
+    // }
 
     private async Task<List<AudioFile>> GetAudioFilesAsync()
     {
