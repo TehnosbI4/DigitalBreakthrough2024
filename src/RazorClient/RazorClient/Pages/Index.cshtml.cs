@@ -1,10 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http.Headers;
-using System.Text.Json.Nodes;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace RazorClient.Pages;
@@ -26,30 +23,36 @@ public class IndexModel : PageModel
     
     public async Task OnPost()
     {
+        var audioFiles = await GetAudioFilesAsync();
+
+        var response = SendAudioFilesAsync(audioFiles);
+    }
+
+    private async Task<List<AudioFile>> GetAudioFilesAsync()
+    {
+        var audioFiles = new List<AudioFile>();
         foreach (var file in UploadedFiles)
         {
             using var stream = new MemoryStream((int)file.Length);
             await file.CopyToAsync(stream);
             var bytes=stream.ToArray();
-            await SendMp3Async(bytes);
+            audioFiles.Add(new AudioFile(file.FileName, bytes));
         }
+        
+        return audioFiles;
     }
 
-    private static async Task SendMp3Async(byte[] bytes)
+    private async Task<string> SendAudioFilesAsync(List<AudioFile> audioFiles)
     {
-        //var content = new ByteArrayContent(bytes);
         using StringContent jsonContent = new(
-        JsonSerializer.Serialize(new
-        {
-            userId = 77,
-            id = 1,
-            title = "write code sample",
-            completed = false
-        }),
-        Encoding.UTF8,
-        "application/json");
+            JsonSerializer.Serialize(new
+            {
+                files = audioFiles
+            }),
+            Encoding.UTF8,
+            "application/json");
 
-        using HttpResponseMessage response = await _httpClient.PostAsync(
+        using var response = await _httpClient.PostAsync(
             "http://127.0.0.1:5000/submit_input",
             jsonContent);
 
@@ -57,10 +60,9 @@ public class IndexModel : PageModel
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"{jsonResponse}\n");
-
-        //var content = new StringContent(myObject.ToString(), Encoding.UTF8, "application/json");
-        //using var response = await _httpClient.PostAsync("http://127.0.0.1:5000", content);
-        //var responseText = await response.Content.ReadAsStringAsync();
-        //Console.WriteLine(responseText);
+        
+        return jsonResponse;
     }
 }
+
+public record AudioFile(string Name, byte[] Content);
