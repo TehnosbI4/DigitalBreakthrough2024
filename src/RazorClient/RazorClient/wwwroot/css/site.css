@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#logo {
+  height: 30px;
+  margin-right: 40px;
+}
+
+#drop_zone {
+  border: 5px solid blue;
+  width: 200px;
+  height: 100px;
+}
