@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
+using System.Net.Http;
 
 namespace RazorClient.Pages;
 
@@ -12,7 +13,7 @@ public class IndexModel : PageModel
     
     private readonly ILogger<IndexModel> _logger;
     private IWebHostEnvironment _environment;
-    private static HttpClient _httpClient = new();
+    private static HttpClient _httpClient = new() {Timeout = TimeSpan.FromMinutes(10) };
     private string _filesPath;
 
     public IndexModel(ILogger<IndexModel> logger, IWebHostEnvironment hostingEnvironment)

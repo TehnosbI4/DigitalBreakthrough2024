@@ -4,6 +4,9 @@ from flask_restful import Resource, Api
 from core import AudioValidator
 import pydub
 import base64
+from flask import json
+
+json.provider.DefaultJSONProvider.ensure_ascii = False
 
 app = Flask(__name__)
 api = Api(app)
@@ -15,30 +18,20 @@ def post():
     print(mp3_data)
     mp3_data = mp3_data['files']  # status code
     
-    bins_names = []
-    name = []
+    paths = []
     for d in mp3_data:
-        c_data, name = d["Content"], d["Name"]
+        path =d["Content"]
 
-        bins_names.append((c_data, name))
+        paths.append(path)
 
-        b =  base64.b64decode(c_data)
-        wav_file = open("temp.mp3", "wb")
-        wav_file.write(b)
-
-        #encode_string = base64.b64encode(open(", "rb").read())
-
-        mp3 = pydub.AudioSegment.from_(c_data)
-        print(mp3)
-
-    preds, texts = av.full_pipeline(bin_audios_n_names=bins_names)
+    preds, texts = av.full_pipeline(paths=paths)
 
     decoded_data = {"data" : []}
 
-    for i, (pred, txt) in enumerate(zip((preds, texts))):
-        
+    for pred, txt in zip(preds, texts):
+        print(pred, txt)
         decoded_data["data"].append({
-            "prediction": pred,
+            "prediction": str(pred),
             "text": txt
         })
 

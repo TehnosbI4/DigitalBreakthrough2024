@@ -13,22 +13,10 @@ from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 from sentence_transformers import SentenceTransformer, util
 from nltk.corpus import stopwords
 from templates import TMP
-from io import BytesIO
 
 def read(f, normalized=False):
     """MP3 to numpy array"""
     a = pydub.AudioSegment.from_mp3(f)
-    y = np.array(a.get_array_of_samples())
-    if a.channels == 2:
-        y = y.reshape((-1, 2))
-    if normalized:
-        return a.frame_rate, np.float32(y) / 2**15
-    else:
-        return a.frame_rate, y
-    
-def read_binary(mp3_data: str, normalized=False):
-    """MP3 to numpy array"""
-    a = pydub.AudioSegment.from_mp3(BytesIO(mp3_data))
     y = np.array(a.get_array_of_samples())
     if a.channels == 2:
         y = y.reshape((-1, 2))
@@ -85,24 +73,14 @@ class AudioValidator():
             self.clf = pickle.load(f)
 
     def speech2text(self, path):
-        audio = read_binary(path, True)
+        audio = read(path, True)
         signal_array = audio[1]
         sr = audio[0]
 
         sample = create_sample(signal_array, sr, path)
 
         result = self.pipe(sample["audio"], generate_kwargs={"language": "russian"})
-        result = re.sub("Продолжение следует...","", result["text"])
-        return result
-    
-    def speech2text(self, bin_audio, name):
-        audio = read_binary(bin_audio, True)
-        signal_array = audio[1]
-        sr = audio[0]
-
-        sample = create_sample(signal_array, sr, name)
-
-        result = self.pipe(sample["audio"], generate_kwargs={"language": "russian"})
+        print("path: " + result["text"])
         result = re.sub("Продолжение следует...","", result["text"])
         return result
 
@@ -156,11 +134,13 @@ class AudioValidator():
 
         return self.clf.predict(cosine_scores)
     
-    def full_pipeline(self, bin_audios_n_names):
+    def full_pipeline(self, paths):
         texts = []
-        for bin_audio, name in bin_audios_n_names:
-            print(f"audio: {bin_audio}")
-            texts.append(self.speech2text(bin_audio, name))
+        for path in paths:
+            
+            txt = self.speech2text(path)
+            
+            texts.append(txt)
 
         preds = self.predict_proba(texts.copy())
         return preds, texts
@@ -172,4 +152,4 @@ if __name__ == '__main__':
     c_path = os.getcwd()
 
     #av = AudioValidator()
-    #print(av.full_pipeline([f"{c_path}\\02.05.2024_00_41_02.mp3"]))
+    #print(av.full_pipeline([r"C:\Users\Vadim\Desktop\train_RZHD_AnalizatorPeregovorov\02.05.2024 05_01_42.mp3"]))
