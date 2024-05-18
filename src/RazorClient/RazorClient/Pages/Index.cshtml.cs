@@ -29,17 +29,24 @@ public class IndexModel : PageModel
     {
         var audioFiles = await GetAudioFilesAsync();
 
-        var response = SendAudioFilesAsync(audioFiles);
-
-
+        var responseString = await SendAudioFilesAsync(audioFiles);
+        
+        var response = JsonSerializer.Deserialize<ResponseDto>(responseString);
+        
+        
         var table = new List<AnalyzeResult>();
-        for (var i = 0; i < audioFiles.Count; i++)
+        if (response?.Data.Count == audioFiles.Count)
         {
-            var file = audioFiles[i];
-            var filePath = Path.Combine("AudioFiles", file.Name);
-            var row = new AnalyzeResult(filePath, true, "shiiiiish");
-            table.Add(row);
+            for (var i = 0; i < audioFiles.Count; i++)
+            {
+                var file = audioFiles[i];
+                var filePath = Path.Combine("AudioFiles", file.Name);
+                var predictionResult = response.Data[i];  
+                var row = new AnalyzeResult(filePath, predictionResult.Prediction, predictionResult.Text!);
+                table.Add(row);
+            }
         }
+        
 
         Results = table;
         
@@ -114,3 +121,14 @@ public class IndexModel : PageModel
 
 public record AudioFile(string Name, string Content);
 public record AnalyzeResult(string Name, bool Status, string Text);
+
+public class PredictionResult
+{
+    public bool Prediction { get; set; }
+    public string? Text { get; set; }
+}
+
+public class ResponseDto
+{
+    public IList<PredictionResult> Data { get; set; }
+}
