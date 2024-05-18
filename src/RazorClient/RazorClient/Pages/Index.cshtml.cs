@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
-using System.Net.Http;
 
 namespace RazorClient.Pages;
 
@@ -62,17 +61,6 @@ public class IndexModel : PageModel
     {
         Results = new List<AnalyzeResult>();
     }
-    //
-    // public PartialViewResult OnGetTablePartial()
-    // {
-    //     // Results = new List<AnalyzeResult>()
-    //     // {
-    //     //     new AnalyzeResult(
-    //     //         "AudioFiles/02.05.2024 01_08_44.mp3",
-    //     //         true, "ewrtyu")
-    //     // };
-    //     return Partial("_TablePartial", Results); 
-    // }
 
     private async Task<List<AudioFile>> GetAudioFilesAsync()
     {
@@ -91,10 +79,7 @@ public class IndexModel : PageModel
             {
                 await file.CopyToAsync(fileStream);
             }
-
-            // byte[] bytes = await System.IO.File.ReadAllBytesAsync(filePath);
-            // string fileInBase64 = Convert.ToBase64String(bytes);
-            // audioFiles.Add(new AudioFile(file.FileName, fileInBase64));
+            
             audioFiles.Add(new AudioFile(file.FileName, filePath));
         }
 
@@ -114,9 +99,7 @@ public class IndexModel : PageModel
         using var response = await _httpClient.PostAsync(
             "http://127.0.0.1:5000/submit_input",
             jsonContent);
-
-        //response.EnsureSuccessStatusCode().WriteRequestToConsole();
-
+        
         var jsonResponse = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"{jsonResponse}\n");
 
@@ -125,11 +108,11 @@ public class IndexModel : PageModel
 }
 
 public record AudioFile(string Name, string Content);
-public record AnalyzeResult(string Name, bool Status, string Text);
+public record AnalyzeResult(string Name, string Status, string Text);
 
 public class PredictionResult
 {
-    public bool Prediction { get; set; }
+    public string? Prediction { get; set; }
     public string? Text { get; set; }
 }
 
