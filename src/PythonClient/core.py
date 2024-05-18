@@ -5,12 +5,14 @@ import numpy as np
 import re
 import spacy
 import pickle
+import os
+
 
 from gensim.parsing.preprocessing import stem_text
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
-from datasets import load_dataset
 from sentence_transformers import SentenceTransformer, util
 from nltk.corpus import stopwords
+from templates import TMP
 
 def read(f, normalized=False):
     """MP3 to numpy array"""
@@ -94,7 +96,7 @@ class AudioValidator():
         if remove_stop_words:
             prep_text = ""
             for word in new_text.split(" "):
-                if word not in stoplist:
+                if word not in self.stoplist:
                     prep_text += word + " " 
             new_text = prep_text
         
@@ -127,20 +129,24 @@ class AudioValidator():
         return cosine_scores
 
     def predict_proba(self, texts):
-        cosine_scores = get_cosine_scores(templates, texts).cpu().numpy()
+        cosine_scores = self.get_cosine_scores(TMP, texts).cpu().numpy()
 
         return self.clf.predict(cosine_scores)
     
     def full_pipeline(self, paths):
         texts = []
         for path in paths:
-            texts.append(speech2text(path))
+            print(f"path: {path}")
+            texts.append(self.speech2text(path))
 
-        preds = predict_proba(texts)
-        return preds
+        preds = self.predict_proba(texts.copy())
+        return preds, texts
 
-# audio_path = "/kaggle/input/hack-db/train_RZHD_AnalizatorPeregovorov/02.05.2024 01_34_17.mp3"
+# audio_path = r"C:\Users\Vadim\source\repos\DigitalBreakthrough2024\src\PythonClient\02.05.2024_00_41_02.mp3"
 # audio = read(audio_path, True)
 # audio
 if __name__ == '__main__':
+    c_path = os.getcwd()
+
     av = AudioValidator()
+    print(av.full_pipeline([f"{c_path}\\02.05.2024_00_41_02.mp3"]))
