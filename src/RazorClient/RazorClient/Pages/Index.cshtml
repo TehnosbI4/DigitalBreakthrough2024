@@ -4,8 +4,20 @@
     ViewData["Title"] = "RZD-Recognise";
 }
 <head>
+    <!-- Filepond css -->
+    <link rel="stylesheet" href="~/assets/libs/filepond/filepond.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.css">
+    
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+    <!-- filepond js -->
+    <script src="~/assets/libs/filepond/filepond.min.js"></script>
+    <script src="~/assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
+    <script src="~/assets/libs/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
+    <script src="~/assets/libs/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js"></script>
+    <script src="~/assets/libs/filepond-plugin-file-encode/filepond-plugin-file-encode.min.js"></script>
+    
 </head>
 <div class="d-flex flex-fill flex-wrap" style="align-items: center">
     <form method="post" class="flex-fill d-flex form-upload">
@@ -22,7 +34,32 @@
             </button>
         </div>
         <div class="">
-            <audio controls src="-ot-vinta-bass-bossted.mp3"></audio>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Аудио</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td><audio controls src="-ot-vinta-bass-bossted.mp3"></audio></td>
+                    <td><i class="bi bi-check"></i></td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td><audio controls src="-ot-vinta-bass-bossted.mp3"></audio></td>
+                    <td><i class="bi bi-x"></i></td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2"><audio controls src="-ot-vinta-bass-bossted.mp3"></audio></td>
+                    <td><i class="bi bi-check"></i></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>

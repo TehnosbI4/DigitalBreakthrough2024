@@ -42,7 +42,6 @@ body {
 .menu {
   height: 75vh;
   flex-basis: 70%;
-  border: 1px black solid;
   align-items: center;
 }
 
@@ -82,7 +81,6 @@ audio::-webkit-media-controls-enclosure{
 /*}*/
 
 audio {
-  border: 1px black solid;
 }
 
 
