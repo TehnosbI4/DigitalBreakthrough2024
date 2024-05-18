@@ -145,9 +145,7 @@ class AudioValidator():
         preds = self.predict_proba(texts.copy())
         return preds, texts
 
-# audio_path = r"C:\Users\Vadim\source\repos\DigitalBreakthrough2024\src\PythonClient\02.05.2024_00_41_02.mp3"
-# audio = read(audio_path, True)
-# audio
+
 if __name__ == '__main__':
     c_path = os.getcwd()
 
