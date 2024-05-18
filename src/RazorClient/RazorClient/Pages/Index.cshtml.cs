@@ -8,6 +8,8 @@ namespace RazorClient.Pages;
 
 public class IndexModel : PageModel
 {
+    public List<AnalyzeResult> Results { get; set; }
+    
     private readonly ILogger<IndexModel> _logger;
     private IWebHostEnvironment _environment;
     private static HttpClient _httpClient = new();
@@ -27,6 +29,18 @@ public class IndexModel : PageModel
         var audioFiles = await GetAudioFilesAsync();
 
         var response = SendAudioFilesAsync(audioFiles);
+
+
+        var table = new List<AnalyzeResult>();
+        for (var i = 0; i < audioFiles.Count; i++)
+        {
+            var file = audioFiles[i];
+            var filePath = Path.Combine(_filesPath, file.Name);
+            var row = new AnalyzeResult(filePath, true, "shiiiiish");
+            table.Add(row);
+        }
+
+        Results = table;
     }
 
     private async Task<List<AudioFile>> GetAudioFilesAsync()
@@ -41,21 +55,16 @@ public class IndexModel : PageModel
         var audioFiles = new List<AudioFile>();
         foreach (var file in UploadedFiles)
         {
-            //using var stream = new MemoryStream((int)file.Length);
-            //await file.CopyToAsync(stream);
-            //var bytes = stream.ToArray();
-            
-
             var filePath = Path.Combine(_filesPath, file.FileName);
             await using (var fileStream = new FileStream(filePath, FileMode.Create)) 
             {
                 await file.CopyToAsync(fileStream);
             }
 
-            byte[] bytes = await System.IO.File.ReadAllBytesAsync(filePath);
-            string fileInBase64 = Convert.ToBase64String(bytes);
-            audioFiles.Add(new AudioFile(file.FileName, fileInBase64));
-
+            // byte[] bytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            // string fileInBase64 = Convert.ToBase64String(bytes);
+            // audioFiles.Add(new AudioFile(file.FileName, fileInBase64));
+            audioFiles.Add(new AudioFile(file.FileName, filePath));
         }
 
         return audioFiles;
@@ -85,3 +94,4 @@ public class IndexModel : PageModel
 }
 
 public record AudioFile(string Name, string Content);
+public record AnalyzeResult(string Name, bool Status, string Text);
