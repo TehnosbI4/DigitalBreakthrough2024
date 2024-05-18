@@ -36,7 +36,7 @@ public class IndexModel : PageModel
             using var stream = new MemoryStream((int)file.Length);
             await file.CopyToAsync(stream);
             var bytes=stream.ToArray();
-            audioFiles.Add(new AudioFile(file.Name, bytes));
+            audioFiles.Add(new AudioFile(file.FileName, bytes));
         }
         
         return audioFiles;
