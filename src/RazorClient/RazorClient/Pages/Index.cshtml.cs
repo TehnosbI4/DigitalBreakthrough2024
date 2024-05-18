@@ -41,14 +41,21 @@ public class IndexModel : PageModel
         var audioFiles = new List<AudioFile>();
         foreach (var file in UploadedFiles)
         {
-            using var stream = new MemoryStream((int)file.Length);
-            await file.CopyToAsync(stream);
-            var bytes = stream.ToArray();
-            audioFiles.Add(new AudioFile(file.FileName, bytes));
+            //using var stream = new MemoryStream((int)file.Length);
+            //await file.CopyToAsync(stream);
+            //var bytes = stream.ToArray();
+            
 
             var filePath = Path.Combine(_filesPath, file.FileName);
-            await using var fileStream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(fileStream);
+            await using (var fileStream = new FileStream(filePath, FileMode.Create)) 
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            byte[] bytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            string fileInBase64 = Convert.ToBase64String(bytes);
+            audioFiles.Add(new AudioFile(file.FileName, fileInBase64));
+
         }
 
         return audioFiles;
@@ -77,4 +84,4 @@ public class IndexModel : PageModel
     }
 }
 
-public record AudioFile(string Name, byte[] Content);
+public record AudioFile(string Name, string Content);
