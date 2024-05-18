@@ -26,16 +26,63 @@ body {
   margin-right: 40px;
 }
 
-#drop_zone {
-  border: 5px solid blue;
-  width: 200px;
-  height: 100px;
+.form-upload {
+  height: 75vh;
+  align-content: center;
+  /*flex-basis: 20%;*/
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  padding-right: 4px;
+}
+
+.form-control {
+  margin: 5px;
+  width: 98%;
+}
+
+.menu {
+  height: 75vh;
+  flex-basis: 70%;
+  border: 1px black solid;
+  align-items: center;
+}
+
+
+.btn-submit {
+  margin: 10px;
+}
+
+.upload {
+  height: 40px;
+  border-radius: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+
+#bi {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.filepond--credits {
+  display: none;
+  margin: 0;
+  padding: 0;
 }
 
 audio::-webkit-media-controls-enclosure{
   /*background-color: #bb2d3b;*/
   /*cursor: pointer;*/
   /*width: 75.390625%;*/
+}
+
+/*.filepond--drop-label {*/
+/*  background-color: #f8f8f8;*/
+/*}*/
+
+audio {
+  border: 1px black solid;
 }
 
 

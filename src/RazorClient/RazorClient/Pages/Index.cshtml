@@ -7,21 +7,25 @@
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 </head>
-<div class="">
-    <form method="post" class="p-2 flex-fill d-flex">
-        <div class="flex-fill bd-highlight">
+<div class="d-flex flex-fill flex-wrap" style="align-items: center">
+    <form method="post" class="flex-fill d-flex form-upload">
+        <div class="flex-fill">
             <input asp-for="UploadedFiles" multiple class="form-control">
         </div>
-        <div class="">
-            <button class="btn" style="" id="submit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20%" height="20%" fill="currentColor" class="bi bi-fast-forward-circle-fill" viewBox="0 0 16 16">
-                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M4.79 5.093 8 7.386V5.5a.5.5 0 0 1 .79-.407l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 8 10.5V8.614l-3.21 2.293A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .79-.407"/>
+    </form>
+    <div class="menu flex-wrap d-flex">
+        <div class="btn-submit">
+            <button class="btn upload" id="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16" style="margin: 0; padding: 0">
+                    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                 </svg>
             </button>
         </div>
-    </form>
+        <div class="">
+            <audio controls src="-ot-vinta-bass-bossted.mp3"></audio>
+        </div>
 
-    <audio controls src="-ot-vinta-bass-bossted.mp3"></audio>
+    </div>
 </div>
 
 @section scripts{
