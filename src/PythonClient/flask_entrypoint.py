@@ -28,7 +28,7 @@ def post():
 
         #encode_string = base64.b64encode(open(", "rb").read())
 
-        mp3 = pydub.AudioSegment.from_file(c_data)
+        mp3 = pydub.AudioSegment.from_(c_data)
         print(mp3)
 
     preds, texts = av.full_pipeline(bin_audios_n_names=bins_names)
