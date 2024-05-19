@@ -20,14 +20,14 @@
             </button>
         </div>
     </form>
-    <div class="d-flex  justify-content-between tables">
-        <div id="grid" class="col-6 table_in">
-            <partial name="_TablePartial" model="@Model.Results" />
+    <div class="tables">
+        <div id="grid" class="table_in">
+            <partial name="_TablePartial" model="@Model.Results"/>
         </div>
-
-        <div class="col-6 text_col">
-            <textarea class="form-control"></textarea>
-        </div>
+        @* *@
+        @* <div class="col-6 text_col"> *@
+        @*     <textarea class="form-control" id="textarea_"></textarea> *@
+        @* </div> *@
     </div>
 </div>
 
@@ -50,6 +50,10 @@
                 });
             });
         });
+        
+        
+
+        
 
     </script>
 }
